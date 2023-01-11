@@ -238,3 +238,20 @@ https://bobbyhadz.com/blog/javascript-cannot-set-property-value-of-null
 ```
 
 property - value -of -null
+
+# Arrow Function Overload
+
+[Typescript Overload Arrow Function - StackBlitz](https://stackblitz.com/edit/typescript-overload-arrow-function?file=index.ts)
+
+굳 예시로 아주좋음 
+
+
+
+# tsc 서로다른 변수 한번에 2개 생성
+
+```typescript
+const [accessToken, refreshToken] = await Promise.all([
+      const a,
+      const b,
+    ])
+```

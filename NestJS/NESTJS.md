@@ -77,3 +77,17 @@ https://velog.io/@aryang/NestJS-winston%EC%9C%BC%EB%A1%9C-%EB%A1%9C%EA%B7%B8-%EA
 ```
 https://choseongho93.tistory.com/317
 ```
+
+# 의존 주입
+
+service나 module를 서로 import하려고 하다보면 에러가 날때가 있는데 
+
+그때 `forwardRef(() => ModuleB)` 같은 식으로 의존주입하여 해결한다
+
+또는 생성자 부분에서 
+
+```typescript
+ @Inject(forwardRef(() => ModuleBService))
+```
+
+같은 방법으로도 가능하다 
