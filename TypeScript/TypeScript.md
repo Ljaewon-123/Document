@@ -245,8 +245,6 @@ property - value -of -null
 
 굳 예시로 아주좋음 
 
-
-
 # tsc 서로다른 변수 한번에 2개 생성
 
 ```typescript
@@ -255,3 +253,9 @@ const [accessToken, refreshToken] = await Promise.all([
       const b,
     ])
 ```
+
+# TSC 분명 타입이 맞는 데 자꾸 에러날때
+
+https://soopdop.github.io/2020/12/01/index-signatures-in-typescript/
+
+백틱 없는게 더 편할지도...
