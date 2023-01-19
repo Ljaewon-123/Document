@@ -91,3 +91,25 @@ service나 module를 서로 import하려고 하다보면 에러가 날때가 있
 ```
 
 같은 방법으로도 가능하다 
+
+# Nest MiddleWare
+
+- Pipes: 유효성체크, 요청이 컨트롤러에 도달하기 전에 클라이언트에서 보낸 값을 미리 봐서 미리 정수변환같은 작업이나 에러를 던짐
+  
+  - 요청 유효성 검사 및 페이로드 변환을 위해 만들어짐 데이터를 예상한대로 직렬화함
+
+- Filters:  front단에서 Catch 를 받기전 back쪽에서 한번 들렸다 (가는곳 원하는 에러 지정가능)
+  
+  - 필터는 오류처리 미들웨어. 특정 오류 처리기를 사용할 경로와 각 경로 주변의 복잡성을 관리하는 방법을 알 수 있음
+
+- Guards: 인증 미들웨어 특정조건을 만족하냐 못하냐에 따라 걸러줌 컨트롤러 전에 미리 가드에 잡힘 
+
+- interceptors: 인터센터는 응답 매핑 및 캐시 관리와 함께 요청 로깅과 같은 전후 미들웨어 입니다. 각요청 전후에 이를 실행하는 기능은 매우 강력하고 유용합니다.
+
+    
+
+## 각 미들웨어 불러지는 (called)순서
+
+middleware -> guard -> interceptor (before) -> pipe -> controller ->
+
+service -> controller -> interceptor (after) -> fillter ( if applicable) -> client
