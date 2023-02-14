@@ -1,5 +1,7 @@
 # NESTJS DataSource
 
+> 엔티티가 아니라 db자체로 만드는거 쿼리빌더쓰지 이거 잘안씀
+
 ```typescript
 export const dataSource = new DataSource({
   type: 'postgres',
@@ -113,3 +115,7 @@ service나 module를 서로 import하려고 하다보면 에러가 날때가 있
 middleware -> guard -> interceptor (before) -> pipe -> controller ->
 
 service -> controller -> interceptor (after) -> fillter ( if applicable) -> client
+
+# 쿼리빌더 .getMany() .getRawMany() 차이?
+
+일단 many는 전부 가져온다는건데 raw가 붙게되면 엔티티에 포함되지 않는 `typeof any`로 가져온다는거 같다 many를 사용하면 엔티티 타입을 가져온다. 
