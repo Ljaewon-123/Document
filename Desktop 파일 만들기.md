@@ -35,5 +35,3 @@ chmod 777 /path/fileName
 ```
 chmod 777 /파일명
 ```
-
-
