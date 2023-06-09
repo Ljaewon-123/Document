@@ -259,3 +259,165 @@ const [accessToken, refreshToken] = await Promise.all([
 https://soopdop.github.io/2020/12/01/index-signatures-in-typescript/
 
 백틱 없는게 더 편할지도...
+
+# class  (접근제어자 protected private 꼭 다시 보기)
+
+```typescript
+class Animal {
+  constructor(name: string) {
+    console.log(`Animal 생성자 호출: ${name}`);
+  }
+}
+
+class Dog extends Animal {
+  constructor(name: string) {
+    super(name); // 상위 클래스의 생성자 호출
+    console.log(`Dog 생성자 호출: ${name}`);
+  }
+}
+
+const dog = new Dog("멍멍이");
+```
+
+[LOG]: "Animal 생성자 호출: 멍멍이"  
+
+---
+
+[LOG]: "Dog 생성자 호출: 멍멍이"
+
+상속시 하위클래스에서 생성자를 정의하게 되면 `super()`를 반드시 써줘야함 아니면 
+
+`Constructors for derived classes must contain a 'super' call.` 에러 
+
+super()를 사용할때 자동으로 상위클래스 생성자가 호출
+
+> 1. 상위 클래스의 생성자가 실행
+> 2. 상위 클래스의 생성자 내부의 초기화 코드가 실행
+> 3. 하위 클래스의 생성자의 나머지 부분이 실행
+
+## **super은 상위 변수에 ~~을 사용하겠다 라는 선언같은거**
+
+그럼 super()를 사용해야하고 하위에서 this와 비교할려면 접근제어자를 둘중에 하나에는 선언해야함
+
+```typescript
+class Animal {
+    protected name:string;
+  constructor( name: string, protected age: number) {
+    this.name = name
+    console.log(`Animal 생성자 호출: ${name}, ${age}`);
+  }
+}
+
+class Dog extends Animal {
+  constructor(name: string, age: number, private breed: string) {
+    super(name, age); // name과 age 값을 상위 클래스의 생성자로 전달
+    console.log(`Dog 생성자 호출: ${this.name}, ${this.age}, ${this.breed}`);
+  }
+}
+
+or
+
+class Animal {
+  constructor(protected name: string, protected age: number) {
+    console.log(`Animal 생성자 호출: ${name}, ${age}`);
+  }
+}
+```
+
+```typescript
+class Animal {
+  protected name: string;
+  protected age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+    console.log(`Animal 생성자 호출: ${name}, ${age}`);
+  }
+
+  protected greet(): void {
+    console.log(`안녕하세요, 저는 ${this.name}이고 ${this.age}살입니다.`);
+  }
+}
+
+class Dog extends Animal {
+  private breed: string;
+
+  constructor(name: string, age: number, breed: string) {
+    super(name, age);
+    this.breed = breed;
+    console.log(`Dog 생성자 호출: ${this.name}, ${this.age}, ${this.breed}`);
+    console.log(`하위에서 가지고 있는 상위 맴버 ${name}, ${age}`)
+  }
+
+  public bark(): void {
+    console.log(`${this.name}가 멍멍하고 짖습니다!`);
+  }
+}
+
+const dog = new Dog("멍멍이", 3, "푸들");
+dog.greet();  // "안녕하세요, 저는 멍멍이이고 3살입니다."
+dog.bark();   // "멍멍이가 멍멍하고 짖습니다!"
+```
+
+greet() 부분에서 
+
+> Property 'greet' is protected and only accessible within class 'Animal' and its subclasses.
+
+1. 접근제어자를 public 으로 바꾼다 protected라도 클래스 내부에서 쓴거지 인스턴스화해서 객체로 만들면 외부가 된다 상속아니더라도 그냥 인스턴스하면 외부임 
+
+2. 오버로딩 할때 접근제어자를 `public`로 해줘야함 
+
+3. 클래스 내부에서 선언해주는 사용해주는 매소드를 추가로 만든다  아래는 예시
+
+```typescript
+// @errors: 2445
+class Greeter {
+  public greet() {
+    console.log("Hello, " + this.getName());
+  }
+  protected getName() {
+    return "hi";
+  }
+}
+
+class SpecialGreeter extends Greeter {
+  public howdy() {
+    // OK to access protected member here
+    console.log("Howdy, " + this.getName());
+    //                          ^^^^^^^^^^^^^^
+  }
+}
+const g = new SpecialGreeter();
+g.greet(); // OK
+g.getName();
+g.howdy() // cool
+```
+
+[LOG]: "Hello, hi"  
+
+---
+
+[LOG]: "Howdy, hi"
+
+getName()은 실행되지 않는다 
+
+## // 접근제어자 Private
+
+> 실습은 playGround에서 하고 있는데 굳이여기다 코드 복붙을 다시 해야하나?? 
+
+핵심 부분
+
+#### Caveats
+
+Like other aspects of TypeScript’s type system, `private` and `protected` [are only enforced during type checking](https://www.typescriptlang.org/play?removeComments=true&target=99&ts=4.3.4#code/PTAEGMBsEMGddAEQPYHNQBMCmVoCcsEAHPASwDdoAXLUAM1K0gwQFdZSA7dAKWkoDK4MkSoByBAGJQJLAwAeAWABQIUH0HDSoiTLKUaoUggAW+DHorUsAOlABJcQlhUy4KpACeoLJzrI8cCwMGxU1ABVPIiwhESpMZEJQTmR4lxFQaQxWMm4IZABbIlIYKlJkTlDlXHgkNFAAbxVQTIAjfABrAEEC5FZOeIBeUAAGAG5mmSw8WAroSFIqb2GAIjMiIk8VieVJ8Ar01ncAgAoASkaAXxVr3dUwGoQAYWpMHBgCYn1rekZmNg4eUi0Vi2icoBWJCsNBWoA6WE8AHcAiEwmBgTEtDovtDaMZQLM6PEoQZbA5wSk0q5SO4vD4-AEghZoJwLGYEIRwNBoqAzFRwCZCFUIlFMXECdSiAhId8YZgclx0PsiiVqOVOAAaUAFLAsxWgKiC35MFigfC0FKgSAVVDTSyk+W5dB4fplHVVR6gF7xJrKFotEk-HXIRE9PoDUDDcaTAPTWaceaLZYQlmoPBbHYx-KcQ7HPDnK43FQqfY5+IMDDISPJLCIuqoc47UsuUCofAME3Vzi1r3URvF5QV5A2STtPDdXqunZDgDaYlHnTDrrEAF0dm28B3mDZg6HJwN1+2-hg57ulwNV2NQGoZbjYfNrYiENBwEFaojFiZQK08C-4fFKTVCozWfTgfFgLkeT5AUqiAA).
+
+This means that JavaScript runtime constructs like `in` or simple property lookup can still access a `private` or `protected` member:
+
+`private` also allows access using bracket notation during type checking. This makes `private`-declared fields potentially easier to access for things like unit tests, with the drawback that these fields are *soft private* and don’t strictly enforce privacy.
+
+그래서 
+
+Unlike TypeScripts’s `private`, JavaScript’s [private fields](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_class_fields) (`#`) remain private after compilation and do not provide the previously mentioned escape hatches like bracket notation access, making them *hard private*.
+
+If you need to protect values in your class from malicious actors, you should use mechanisms that offer hard runtime privacy, such as closures, WeakMaps, or private fields. Note that these added privacy checks during runtime could affect performance.
