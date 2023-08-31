@@ -117,3 +117,11 @@ temp=# select tableoid::regclass, * from customers;
  cust_old    |  4 | Richard |  80
 (4개 행)
 ```
+
+### info
+
+-- 리눅스에서 postgresql access
+sudo -i -u postgres
+psql -U postgres -h [address]
+
+psql -d <데이터베이스> -f <sql 파일명>

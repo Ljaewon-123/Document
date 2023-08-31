@@ -421,3 +421,19 @@ This means that JavaScript runtime constructs like `in` or simple property loo
 Unlike TypeScripts’s `private`, JavaScript’s [private fields](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_class_fields) (`#`) remain private after compilation and do not provide the previously mentioned escape hatches like bracket notation access, making them *hard private*.
 
 If you need to protect values in your class from malicious actors, you should use mechanisms that offer hard runtime privacy, such as closures, WeakMaps, or private fields. Note that these added privacy checks during runtime could affect performance.
+
+# promise / map, for, forEach
+
+map은 다른 반복문과 다르게 
+
+```
+cosnt test = array.map( async(key) => await someMethod(key))
+```
+
+test의 요소 하나하나가 Prmoise로 되어있는걸 볼수있는데 
+
+다른 반복문의 push와 map에는 차이점이 있다
+
+async/await의 return은 반드시 promise가 되는데 map함수의 결과물 자체가 map의 return이기 때문에  `{ return await someMethos() }` 요소마다 promise객체가 되는것
+
+해결책은 결과물에다가 `Promise.all(result)` 를 해주는것이다.
