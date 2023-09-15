@@ -29,3 +29,9 @@ insert 에러로 실패일수도 있긴한데 1분마다 stream데이터를 저�
 error문제는 아닌거 같은데 
 
 cache문제 같기도 하다 
+
+# other
+
+// .andWhere("date_part('minute',plc_date)=0")
+
+.select('extract(hour from plc_date) AS "hour"')
