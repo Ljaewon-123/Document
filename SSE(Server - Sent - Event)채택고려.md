@@ -4,7 +4,7 @@ websocket에서 단방향 통신만 지원하는 시스템
 
 SSE는 전통적인 HTTP를 통해 전송. **즉, 작동하려면 특별한 프로토콜이나 서버 구현이 필요하지 않음.**
 
-SSE (Server-Sent Events)는 서버에서 클라이언트로 단방향으로 데이터를 전송하는 웹 기술. SSE는 클라이언트와 서버 간의 실시간 통신을 가능하게 하며, 서버에서 주기적으로 업데이트되는 데이터를 클라이언트에게 전송할 수 있다.
+SSE (Server-Sent Events)는 서버에서 클라이언트로 단방향으로 데이터를 전송하는 기술. SSE는 클라이언트와 서버 간의 실시간 통신을 가능하게 하며, 서버에서 주기적으로 업데이트되는 데이터를 클라이언트에게 전송할 수 있다.
 
 ## nestjs 문서 예제
 
@@ -29,22 +29,12 @@ front 부분에서
 
 # 문제
 
-### async await 사용이 필수적인데 사용시 데이터 제대로 전달되지 않는 문제
+연결이후 문제가 있는데 제대로 사용하기 전에 해결해야할 문제였다 
 
-```
-sse() {
-    return interval(1000).pipe(map( async(_) => {
-      const pcs = await this.homeService.getDevice('pcs', 1, 1)
-      return  ({ data: { hello: 'world' } })
-    }));
-```
+클라이언트에 요청은 필요없고 오진 서버의 응답만있으면 되는 현재 상황은 sse가 합당하지만 mdn에서 발견
 
-사용시 전달안됨
+**Warning:** When **not used over HTTP/2**, SSE suffers from a limitation to the maximum number of open connections, which can be specially painful when opening various tabs as the limit is *per browser* and set to a very low number (6). The issue has been marked as "Won't fix" in [Chrome](https://crbug.com/275955) and [Firefox](https://bugzil.la/906896). This limit is per browser + domain, so that means that you can open 6 SSE connections across all of the tabs to `www.example1.com` and another 6 SSE connections to `www.example2.com.` (from [Stackoverflow](https://stackoverflow.com/questions/5195452/websockets-vs-server-sent-events-eventsource/5326159)). When using HTTP/2, the maximum number of simultaneous *HTTP streams* is negotiated between the server and the client (defaults to 100).
 
-에러 x, warn x front쪽 콘솔에 데이터 안찍힘
+문제가 있는데 요약하자만 현재 디폴트설정으로 사용된 http/1.1은 같은 도메인당 6개의 연결정도밖에 사용할수 없다는거다(최대 연결 제한 브라우저마다 도메인당 6개연)  실제로 사용해본 결과 6개 까지만 연결되고 그 이후는 연결되지 않았다 
 
-# 예상이유
-
-SSE가 observable 비동기 스트림을 나타내는 객체인데 promise는 동기
-
-Observable은 해당 Promise를 기다리지 않고 바로 다음 값을 방출
+설령 http/2를 사용한다해도 최대연결수에 한계가 있다면 사용하기에는 불가능 하지 않을까

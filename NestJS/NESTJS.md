@@ -122,8 +122,6 @@ service -> controller -> interceptor (after) -> fillter ( if applicable) -> clie
 
 일단 many는 전부 가져온다는건데 raw가 붙게되면 엔티티에 포함되지 않는 `typeof any`로 가져온다는거 같다 many를 사용하면 엔티티 타입을 가져온다. 
 
-
-
 ### guard 순서
 
 global -> controller -> route
