@@ -1,13 +1,9 @@
 # Timescale download for window
 
-
-
 필수적 선행 패키지
 
 - OpenSSL v3.x
 - [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145)
-
-
 
 ### timescale download url
 
@@ -17,15 +13,11 @@ https://docs.timescale.com/self-hosted/latest/install/installation-windows/
 
 여기서 다운로드 받을수있다. 
 
-
-
 ### setup to timescaledb
 
 기본적으로 환경변수 설정이 안되어있으니 해주고 
 
 `C:\Program Files\PostgreSQL\<version>\bin`
-
-
 
 psql 접속후에 
 
@@ -34,8 +26,6 @@ CREATE EXTENSION IF NOT EXISTS timescaledb;
 ```
 
 `\dx`로 확인해주면 된다. 
-
-
 
 ```plsql
  \dx
@@ -49,8 +39,6 @@ CREATE EXTENSION IF NOT EXISTS timescaledb;
 ```
 
 이렇게 나와야 된거
-
-
 
 ## Troubleshooting
 
@@ -66,8 +54,6 @@ CREATE EXTENSION IF NOT EXISTS timescaledb;
 
 이딴 문자뜨면 
 
-
-
 ```
 SET client_encoding = 'UTF8';
 SET
@@ -76,8 +62,6 @@ SET
 바꿔줘야 제대로된 반응을 확인할수있다. 
 
 ---
-
-
 
 ### Error: extension "timescaledb" must be preloade
 
@@ -105,8 +89,6 @@ Another way to do this, if not preloading other libraries, is with the command:
 
 이거뜨면 성공이라고 봐도된다.
 
-
-
 ```
 C:/Program Files/PostgreSQL/17/data/postgresql.conf
 ```
@@ -118,8 +100,6 @@ https://stackoverflow.com/questions/68435038/fatal-extension-timescaledb-must-be
 ```
 
 참고
-
-
 
 restart를 필히 해주어야하는데 
 
@@ -138,18 +118,8 @@ CREATE EXTENSION
 
 하고 `\dx`확인하면 끝이다. 
 
-
-
 ### could not load library "C:/Program Files/PostgreSQL/17/lib/timescaledb-2.17.2.dll": The specified module could not be found.
 
 필자는 이거 종속성 다운로드 받아서 dll확인하고 다해봤는데 안돼서 지우고 다시했다. 
 
-
-
-
-
 end
-
-
-
-
