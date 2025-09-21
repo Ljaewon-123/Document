@@ -1,0 +1,71 @@
+// kubectl create deployment first-app --image=kub-first-app => 클러스터 접근 못함
+// kubectl get deployments ## 하면 deployment가져오는거
+// kubectl get pods       ## pod 확인 
+
+
+//  docker tag kub-first-app nogaree/kub-first-app
+//  docker push dockerhub-name/kub-first-app      
+// kubectl create deployment first-app --image=dockerhub-name/kub-first-app
+
+// pod는 주소가 바뀌어서 찾기 힘든데 service는 pod를 그룹화하고 공유 주소, 공유 ip주소를 제공
+// 그러면 주소 변경 안됨 ( 클러스터 내외부 모드 지정가능 )
+// 클러스터 외부에서 pod에 접근가능함 
+
+// deployment에 의해 생성된 pod를 노출하기위한 더 편리한 명령
+/*
+--type=[ClusterIP, NodePort, LoadBalancer]
+type에서 할수있는게 많은데 default는 ClusterIP임 
+기본적으로 클러스터 내부에서만 연결가능 
+NodePort: deployment가 실행중인 워커노드의 IP주소를 통해 노출됨 
+더 좋은건 LoadBalancer 유형임 
+LoadBalancer 클러스터가 실행되는 인프라에 존재해야하는 로드밸런서 사용
+그러면 service대한 고유 주소 생성, 들어오는 트래픽을 이 service의 일부인 모든
+pod에 고르게 분산함
+*/
+// 이게 서비스 만드는거 minikube이거는 보기쉽게 minikube로 연결한거 인듯..?
+// kubectl expose deployment first-app --type=LoadBalancer --port=8080 
+
+// kubectl get services  ## 서비스 확인
+
+// minikube service first-app  ## minikube에서 로컬머신에서 실행할수있게 식별(매핑)해줌
+
+// deployment를 생성했기때문에 pod와 pod의 컨테이너가 모니터링 되는중 
+// 실패하면 재시작
+
+//  kubectl scale deployment/first-app --replicas=3
+// ## replicas는 pod의 인스턴스 3 replicas는 동일한 pod/컨테이너가 3번 실행중이라는 의미
+
+// Update!!!
+// kubectl get deployments ## 일단 있는지 확인하고 
+// @desparture kubectl set image deployment/first-app 쿠버네티스한테 업데이트 하라고 알려줌 (하지만 이건 수동적이고고)
+
+// ### kub-first-app:[단순히 증가하는 버전 넘버]
+// docker build -t nogaree/kub-first-app:2 .  
+
+// docker push nogaree/kub-first-app:2
+
+// 쿠버네티스 대시보드에서 컨테이너 이름 확인하고 kub-first-app
+// kubectl set image deployment/first-app kub-first-app=nogaree/kub-first-app:2
+// !!!!:: 허브의 새이미지가 다른 태그에 있는 경우에만 업데이트 하기 때문에 !!!!
+// !!!!!!프로덕션에서는 태그와 이미지 버전 업데이트가 좋음 !!!!
+
+// 현재 업데이트 상태 deployment/+deployment-name
+// kubectl rollout status deployment/first-app
+
+// Rollback 
+// 최근 deployment 롤백 
+// kubectl rollout undo deployment/first-app
+
+// 더 이전으로 롤백
+// kubectl rollout history deployment/first-app
+// kubectl rollout history deployment/first-app --revision=N  # revision 확인
+
+// 특정 리비전으로 롤백
+// kubectl rollout undo deployment/first-app --to-revision=1
+
+// 위에 모든것은 명령적 접근방식 
+
+
+
+
+// ps: 쿠버네티스는 롤링 배포를 한다.
